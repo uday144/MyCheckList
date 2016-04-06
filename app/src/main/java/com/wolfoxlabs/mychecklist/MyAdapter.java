@@ -52,31 +52,32 @@ public final class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View v = view;
-        ImageView picture;
-        TextView name;
+        ViewHolder viewHolder;
 
-        if (v == null) {
-            v = mInflater.inflate(R.layout.grid_item, viewGroup, false);
-            v.setTag(R.id.picture, v.findViewById(R.id.picture));
-            v.setTag(R.id.text, v.findViewById(R.id.text));
+
+        if (view == null) {
+            view = mInflater.inflate(R.layout.grid_item, viewGroup, false);
+            viewHolder = new ViewHolder();
+
+            viewHolder.picture = (ImageView) view.findViewById(R.id.picture);
+            viewHolder.name = (TextView) view.findViewById(R.id.text);
+            view.setTag(viewHolder);
+        }
+        else {
+            viewHolder = (ViewHolder) view.getTag();
         }
         Item item = getItem(i);
-        picture = (ImageView) v.getTag(R.id.picture);
-        name = (TextView) v.getTag(R.id.text);
-     if(i==0 || i%5==0) {
-
-         name.setText(item.name);
-     }
-        else
-     {
-         name.setVisibility(View.GONE);
-     }
-
-        picture.setImageResource(item.drawableId);
 
 
-        return v;
+
+        viewHolder.name.setText(item.name);
+
+
+
+        viewHolder.picture.setImageResource(item.drawableId);
+
+
+        return view;
     }
 
     private static class Item {
@@ -87,5 +88,10 @@ public final class MyAdapter extends BaseAdapter {
             this.name = name;
             this.drawableId = drawableId;
         }
+    }
+
+    private static class ViewHolder{
+        ImageView picture;
+        TextView name;
     }
 }
