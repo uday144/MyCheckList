@@ -7,10 +7,13 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends Activity {
     private Date today;
+    private final List<Item> mItems = new ArrayList<Item>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +23,13 @@ public class MainActivity extends Activity {
         today = calendarUtils.getToday();
         setupUI();
         GridView gridView = (GridView)findViewById(R.id.gridview);
-        gridView.setAdapter(new MyAdapter(this));
+        for (int i = 0; i < 30 ; i++) {
+            mItems.add(new Item("Yel",   R.color.Blue2));
+            mItems.add(new Item("Red",       R.color.Blue3));
+            mItems.add(new Item("Gre",   R.color.Blue4));
+            mItems.add(new Item("Red",       R.color.Blue1));
+        }
+        gridView.setAdapter(new MyAdapter(this,mItems));
 
 }
     private void setupUI() {

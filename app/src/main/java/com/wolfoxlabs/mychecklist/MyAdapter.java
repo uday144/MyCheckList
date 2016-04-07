@@ -8,29 +8,18 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by uday on 02/03/16.
  */
 public final class MyAdapter extends BaseAdapter {
-    private final List<Item> mItems = new ArrayList<Item>();
+    private final List<Item> mItems;
     private final LayoutInflater mInflater;
 
-    public MyAdapter(Context context) {
+    public MyAdapter(Context context, List<Item> mItems) {
         mInflater = LayoutInflater.from(context);
-
-
-        for (int i = 0; i < 30 ; i++) {
-
-            mItems.add(new Item("Red",       R.color.Blue1));
-            mItems.add(new Item("Magenta",   R.color.Blue2));
-            mItems.add(new Item("Red",       R.color.Blue3));
-            mItems.add(new Item("Magenta",   R.color.Blue4));
-        }
-
-
+        this.mItems = mItems;
 
 
     }
@@ -70,9 +59,10 @@ public final class MyAdapter extends BaseAdapter {
 
 
 
-        viewHolder.name.setText(item.name);
-
-
+       if(i%5==0)
+           viewHolder.name.setText("AM>>");
+        else
+           viewHolder.name.setText(item.name);
 
         viewHolder.picture.setImageResource(item.drawableId);
 
@@ -80,15 +70,8 @@ public final class MyAdapter extends BaseAdapter {
         return view;
     }
 
-    private static class Item {
-        public final String name;
-        public final int drawableId;
 
-        Item(String name, int drawableId) {
-            this.name = name;
-            this.drawableId = drawableId;
-        }
-    }
+
 
     private static class ViewHolder{
         ImageView picture;
