@@ -23,15 +23,65 @@ public class MainActivity extends Activity {
         today = calendarUtils.getToday();
         setupUI();
         GridView gridView = (GridView)findViewById(R.id.gridview);
-        for (int i = 0; i < 30 ; i++) {
-            mItems.add(new Item("Yel",   R.color.Blue2));
-            mItems.add(new Item("Red",       R.color.Blue3));
-            mItems.add(new Item("Gre",   R.color.Blue4));
-            mItems.add(new Item("Red",       R.color.Blue1));
-        }
+        prepareData();
         gridView.setAdapter(new MyAdapter(this,mItems));
 
 }
+
+    private void prepareData() {
+        for (int i = 0; i < 24 ; i++) {
+            for(int j = 0; j < 5 ; j++) {
+                String time = String.format("%02d", i)+":"+String.format("%02d", j*15);
+                if(i%2==0){
+                switch (j) {
+                    case 0:
+                        mItems.add(new Item(time, R.color.Blue1));
+                        break;
+                    case 1:
+                        mItems.add(new Item(time, R.color.Blue2));
+                        break;
+                    case 2:
+                        mItems.add(new Item(time, R.color.Blue3));
+                        break;
+                    case 3:
+                        mItems.add(new Item(time, R.color.Blue4));
+                        break;
+                    case 4:
+                        mItems.add(new Item(time, R.color.Blue1));
+                        break;
+                    default:
+                        break;
+
+                }
+                }
+                else
+                {
+                    switch (j) {
+                        case 0:
+                            mItems.add(new Item(time, R.color.Blue2));
+                            break;
+                        case 1:
+                            mItems.add(new Item(time, R.color.Blue3));
+                            break;
+                        case 2:
+                            mItems.add(new Item(time, R.color.Blue4));
+                            break;
+                        case 3:
+                            mItems.add(new Item(time, R.color.Blue1));
+                            break;
+                        case 4:
+                            mItems.add(new Item(time, R.color.Blue2));
+                            break;
+                        default:
+                            break;
+
+                    }
+                }
+
+            }
+        }
+    }
+
     private void setupUI() {
         // Set the Top title
         TextView tv = (TextView) findViewById(R.id.top_title);
