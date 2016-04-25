@@ -6,91 +6,60 @@
     android:background="#1C1C1C"
     android:orientation="vertical"
     android:weightSum="10"
-    tools:context=".MainActivity" >
+    tools:context=".HomeActivity">
 
     <LinearLayout
         android:id="@+id/top_calendar"
-        android:gravity="clip_horizontal"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:paddingLeft="5dp"
-        android:paddingTop="5dp"
-        android:orientation="vertical"
-        android:background="@drawable/main_top">
+        android:background="@drawable/main_top"
+
+        android:gravity="clip_horizontal"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/top_date_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/calendar_date"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:textSize="15sp">
-            </TextView>
 
             <Button
                 android:id="@+id/top_done_button"
-                android:layout_width="wrap_content"
-                android:textSize="14sp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/calendar_date"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/button"
                 android:text="WorkOut!"
                 android:textColor="#FFFFFF"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
-                android:textStyle="bold"
-                android:background="@drawable/button"
-                />
 
-            <TextView
-                android:id="@+id/top_title"
-                android:layout_width="fill_parent"
+
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/qoute"
+                layout="@layout/qoute_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="40sp"
-                android:layout_below="@id/calendar_date"
-                >
-            </TextView>
+                android:layout_below="@id/top_done_button">
 
-            <LinearLayout
-                android:id="@+id/progress_bar"
-                android:layout_marginTop="15dp"
-                android:layout_below="@id/top_title"
-                android:layout_width="fill_parent"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:id="@+id/progress_bar_first"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="80dp"
-                    android:background="#B90D2A"
-                    android:layout_height="6dp">
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/progress_bar_second"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="180dp"
-                    android:background="#54A01B"
-                    android:layout_height="6dp">
-                </LinearLayout>
+            </include>
 
-            </LinearLayout>
 
         </RelativeLayout>
 
     </LinearLayout>
+
     <GridView
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="7"
-        android:verticalSpacing="0dp"
         android:horizontalSpacing="0dp"
+        android:numColumns="5"
         android:scrollbars="none"
         android:stretchMode="columnWidth"
-        android:numColumns="5"/>
+        android:verticalSpacing="0dp" />
 
 </LinearLayout>

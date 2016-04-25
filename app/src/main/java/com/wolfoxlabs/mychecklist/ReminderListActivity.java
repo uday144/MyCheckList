@@ -46,8 +46,8 @@ public class ReminderListActivity extends ListActivity {
     }
     
 
-
 	
+
     private void createReminder() {
         Intent i = new Intent(this, ReminderEditActivity.class);
         startActivityForResult(i, ACTIVITY_CREATE);

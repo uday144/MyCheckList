@@ -1,4 +1,21 @@
 <resources>
+
+    <string name="quote_1">\"You miss 100% of the shots you don\'t take.\"</string>
+    <string name="auther_1">\u2014Wayne Gretzky</string>
+    <string name="quote_2">\"Do what you can, with what you have, where you are.\"</string>
+    <string name="auther_2">\u2014Theodore Roosevelt</string>
+    <string name="quote_3">\"Success will never be a big step in the future, success is a small step taken just now.\"</string>
+    <string name="auther_3">\u2014Jonatan Martensson</string>
+    <string name="quote_4">\"Instead of giving myself reasons why I can\'t, I give myself reasons why I can.\"</string>
+    <string name="auther_4">\u2014Unknown</string>
+    <string name="quote_5">\"Thinking will not overcome fear, but action will.\"</string>
+    <string name="auther_5">\u2014W. Clement Stone</string>
+    <string name="quote_6">\"Life is not measured by the breaths you take but the moments that take your breath away.\"</string>
+    <string name="auther_6">\u2014Unknown</string>
+    <string name="header_talking_point">"Talking Points"</string>
+    <string name="header_ask_a_pro">"Ask a Pro"</string>
+    <string name="header_be_a_pro">"Be a Pro"</string>
+    <string name="header_instruction_for_use">"Instructions for Use"</string>
     <string name="app_name">MyCheckList</string>
     <string name="action_settings">Settings</string>
     <string name="edit_reminder_title">Task Reminder - Edit</string>
