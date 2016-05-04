@@ -104,7 +104,11 @@ public final class MyAdapter extends BaseAdapter {
         return view;
     }
 
-
+    public void fillData(int updatePos)    {
+        getItem(updatePos).setPre_DrawableId(getItem(updatePos).drawableId);
+        getItem(updatePos).setDrawableId(R.color.Green);
+        notifyDataSetChanged();
+    }
 
 
     private static class ViewHolder{

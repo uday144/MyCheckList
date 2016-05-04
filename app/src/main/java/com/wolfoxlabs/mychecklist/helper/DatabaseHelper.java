@@ -3,6 +3,7 @@ package com.wolfoxlabs.mychecklist.helper;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -32,6 +33,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String TABLE_TODO = "todos";
 	private static final String TABLE_TAG = "tags";
 	private static final String TABLE_TODO_TAG = "todo_tags";
+	private static final String TABLE_REMINDER = "reminders";
+	private static final String TABLE_REPEAING_REMINDER = "repeat_reminders";
+
 
 	// Common column names
 	private static final String KEY_ID = "id";
@@ -47,6 +51,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	// NOTE_TAGS Table - column names
 	private static final String KEY_TODO_ID = "todo_id";
 	private static final String KEY_TAG_ID = "tag_id";
+
+	// Reminder Table - column names
+	public static final String REMINDER_ID = "reminder_id";
+	public static final String INTERVAL = "interval";
+
+
+	// Reminder Table - column names
+	public static final String KEY_TITLE = "title";
+	public static final String KEY_BODY = "body";
+	public static final String KEY_DATE_TIME = "reminder_date_time";
 
 	// Table Create Statements
 	// Todo table create statement
@@ -66,6 +80,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ KEY_TODO_ID + " INTEGER," + KEY_TAG_ID + " INTEGER,"
 			+ KEY_CREATED_AT + " DATETIME" + ")";
 
+	// Reminder table create statement
+	private static final String CREATE_TABLE_REMINDER =
+			"create table " + TABLE_REMINDER + " ("
+					+ KEY_ID + " integer primary key autoincrement, "
+					+ KEY_TITLE + " text not null, "
+					+ KEY_BODY + " text not null, "
+					+ KEY_DATE_TIME + " text not null);";
+
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -77,15 +99,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_TABLE_TODO);
 		db.execSQL(CREATE_TABLE_TAG);
 		db.execSQL(CREATE_TABLE_TODO_TAG);
+		db.execSQL(CREATE_TABLE_REMINDER);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.w(LOG, "Upgrading database from version " + oldVersion + " to "
+				+ newVersion + ", which will destroy all old data");
 		// on upgrade drop older tables
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_TODO);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_TAG);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_TODO_TAG);
-
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_REMINDER);
 		// create new tables
 		onCreate(db);
 	}
@@ -376,5 +401,133 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 		Date date = new Date();
 		return dateFormat.format(date);
+	}
+	/**
+	 * Create a new reminder using the title, body and reminder date time provided.
+	 * If the reminder is  successfully created return the new rowId
+	 * for that reminder, otherwise return a -1 to indicate failure.
+	 *
+	 * @param title the title of the reminder
+	 * @param body the body of the reminder
+	 * @param reminderDateTime the date and time the reminder should remind the user
+	 * @return rowId or -1 if failed
+	 */
+	public long createReminder(String title, String body, String reminderDateTime, boolean isRepeating, int interval) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(KEY_TITLE, title);
+		initialValues.put(KEY_BODY, body);
+		initialValues.put(KEY_DATE_TIME, reminderDateTime);
+
+		long reminder_id = db.insert(TABLE_REMINDER, null, initialValues);
+		if(isRepeating)
+			createRepeatingReminder(reminder_id,interval);
+		return reminder_id;
+	}
+	/*
+	 * Creating todo_tag
+	 */
+	public long createRepeatingReminder(long reminder_id, int interval) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(REMINDER_ID, reminder_id);
+		values.put(INTERVAL, interval);
+
+
+		long id = db.insert(TABLE_REPEAING_REMINDER, null, values);
+
+		return id;
+	}
+
+	/**
+	 * Delete the reminder with the given rowId
+	 *
+	 * @param rowId id of reminder to delete
+	 * @return true if deleted, false otherwise
+	 */
+	public boolean deleteReminder(long rowId,boolean isRepeating) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		boolean isDeleted =  db.delete(TABLE_REMINDER, KEY_ID + "=" + rowId, null) > 0;
+		if(isDeleted)
+			deleteRepeatingReminder(rowId);
+		return  isDeleted;
+
+	}
+	public boolean deleteRepeatingReminder(long rowId) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		return  db.delete(TABLE_REPEAING_REMINDER, REMINDER_ID + "=" + rowId, null) > 0;
+
+	}
+	/**
+	 * Return a Cursor over the list of all reminders in the database
+	 *
+	 * @return Cursor over all reminders
+	 */
+	public Cursor fetchAllReminders() {
+		SQLiteDatabase db = this.getReadableDatabase();
+		return db.query(TABLE_REMINDER, new String[] {KEY_ID, KEY_TITLE,
+				KEY_BODY, KEY_DATE_TIME}, null, null, null, null, null);
+	}
+	public Cursor fetchAllRepeatingReminders() {
+		SQLiteDatabase db = this.getReadableDatabase();
+		return db.query(TABLE_REMINDER, new String[] {REMINDER_ID, INTERVAL}, null, null, null, null, null);
+	}
+
+	/**
+	 * Return a Cursor positioned at the reminder that matches the given rowId
+	 *
+	 * @param rowId id of reminder to retrieve
+	 * @return Cursor positioned to matching reminder, if found
+	 * @throws SQLException if reminder could not be found/retrieved
+	 */
+	public Cursor fetchReminder(long rowId) throws SQLException {
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor mCursor =
+
+				db.query(true, TABLE_REMINDER, new String[] {KEY_ID,
+								KEY_TITLE, KEY_BODY, KEY_DATE_TIME}, KEY_ID + "=" + rowId, null,
+						null, null, null, null);
+		if (mCursor != null) {
+			mCursor.moveToFirst();
+		}
+		return mCursor;
+
+	}
+
+	/**
+	 * Update the reminder using the details provided. The reminder to be updated is
+	 * specified using the rowId, and it is altered to use the title, body and reminder date time
+	 * values passed in
+	 *
+	 * @param rowId id of reminder to update
+	 * @param title value to set reminder title to
+	 * @param body value to set reminder body to
+	 * @param reminderDateTime value to set the reminder time.
+	 * @return true if the reminder was successfully updated, false otherwise
+	 */
+	public boolean updateReminder(long rowId, String title, String body, String reminderDateTime, boolean isRepeating, int interval) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues args = new ContentValues();
+		args.put(KEY_TITLE, title);
+		args.put(KEY_BODY, body);
+		args.put(KEY_DATE_TIME, reminderDateTime);
+        boolean isUpdated = db.update(TABLE_REMINDER, args, KEY_ID + "=" + rowId, null) > 0;
+		if(isUpdated)
+			updateRepeatingReminder(rowId,interval);
+		return isUpdated;
+	}
+
+	/*
+	 * Creating todo_tag
+	 */
+	public boolean updateRepeatingReminder(long reminder_id, int interval) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues args = new ContentValues();
+		args.put(REMINDER_ID, reminder_id);
+		args.put(INTERVAL, interval);
+
+		return  db.update(TABLE_REPEAING_REMINDER, args, REMINDER_ID + "=" + reminder_id, null) > 0;
 	}
 }

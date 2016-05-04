@@ -34,6 +34,7 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
     // Database Helper
     DatabaseHelper db;
     private RemindersDbAdapter mDbHelper;
+    MyAdapter myAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,31 +43,17 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
         mDbHelper = new RemindersDbAdapter(this);
         db = new DatabaseHelper(getApplicationContext());
         mDbHelper.open();
-        fillData();
         CalendarUtils calendarUtils = new CalendarUtils();
         today = calendarUtils.getToday();
         setupUI();
         GridView gridView = (GridView)findViewById(R.id.gridview);
-        prepareData();
-        gridView.setAdapter(new MyAdapter(this,mItems));
+        prepareEmptyGrid();
+        myAdapter = new MyAdapter(this,mItems);
+        gridView.setAdapter(myAdapter);
         DBoperrations();
 
 }
-    private void fillData() {
-//        Cursor remindersCursor = mDbHelper.fetchAllReminders();
-//        startManagingCursor(remindersCursor);
-//
-//        // Create an array to specify the fields we want to display in the list (only TITLE)
-//        String[] from = new String[]{RemindersDbAdapter.KEY_TITLE};
-//
-//        // and an array of the fields we want to bind those fields to (in this case just text1)
-//        int[] to = new int[]{R.id.text1};
-//
-//        // Now create a simple cursor adapter and set it to display
-//        SimpleCursorAdapter reminders =
-//                new SimpleCursorAdapter(this, R.layout.reminder_row, remindersCursor, from, to);
-//        setListAdapter(reminders);
-    }
+
 
 
 
@@ -76,21 +63,14 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
         startActivityForResult(i, ACTIVITY_CREATE);
     }
 
-//    @Override
-//    protected void onListItemClick(ListView l, View v, int position, long id) {
-//        super.onListItemClick(l, v, position, id);
-//        Intent i = new Intent(this, ReminderEditActivity.class);
-//        i.putExtra(RemindersDbAdapter.KEY_ROWID, id);
-//        startActivityForResult(i, ACTIVITY_EDIT);
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        fillData();
+        myAdapter.fillData(103);
     }
     int k;
-    private void prepareData() {
+    private void prepareEmptyGrid() {
         for (int i = 0; i < 24 ; i++) {
             for(int j = 0; j < 5 ; j++) {
 
