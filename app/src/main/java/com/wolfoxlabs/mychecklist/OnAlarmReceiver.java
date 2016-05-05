@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.ComponentInfo;
 import android.util.Log;
 
+import com.wolfoxlabs.mychecklist.helper.DatabaseHelper;
+
 public class OnAlarmReceiver extends BroadcastReceiver {
 
 	private static final String TAG = ComponentInfo.class.getCanonicalName(); 
@@ -16,12 +18,12 @@ public class OnAlarmReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Log.d(TAG, "Received wake up from alarm manager.");
 		
-		long rowid = intent.getExtras().getLong(RemindersDbAdapter.KEY_ROWID);
+		long rowid = intent.getExtras().getLong(DatabaseHelper.KEY_ID);
 		
 		WakeReminderIntentService.acquireStaticLock(context);
 		
 		Intent i = new Intent(context, ReminderService.class); 
-		i.putExtra(RemindersDbAdapter.KEY_ROWID, rowid);  
+		i.putExtra(DatabaseHelper.KEY_ID, rowid);
 		context.startService(i);
 		 
 	}

@@ -1,11 +1,6 @@
 
 package com.wolfoxlabs.mychecklist;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -21,6 +16,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.wolfoxlabs.mychecklist.helper.DatabaseHelper;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class ReminderEditActivity extends Activity {
@@ -44,14 +46,14 @@ public class ReminderEditActivity extends Activity {
     private Button mTimeButton;
     private Button mConfirmButton;
     private Long mRowId;
-    private RemindersDbAdapter mDbHelper;
+    private DatabaseHelper mDbHelper;
     private Calendar mCalendar;  
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        mDbHelper = new RemindersDbAdapter(this);
+        mDbHelper = new DatabaseHelper(this);
         
         setContentView(R.layout.reminder_edit);
         
@@ -63,7 +65,7 @@ public class ReminderEditActivity extends Activity {
       
         mConfirmButton = (Button) findViewById(R.id.confirm);
        
-        mRowId = savedInstanceState != null ? savedInstanceState.getLong(RemindersDbAdapter.KEY_ROWID) 
+        mRowId = savedInstanceState != null ? savedInstanceState.getLong(DatabaseHelper.KEY_ID)
                 							: null;
       
         registerButtonListenersAndSetDefaultText();
@@ -72,7 +74,7 @@ public class ReminderEditActivity extends Activity {
 	private void setRowIdFromIntent() {
 		if (mRowId == null) {
 			Bundle extras = getIntent().getExtras();            
-			mRowId = extras != null ? extras.getLong(RemindersDbAdapter.KEY_ROWID) 
+			mRowId = extras != null ? extras.getLong(DatabaseHelper.KEY_ID)
 									: null;
 			
 		}
@@ -87,7 +89,7 @@ public class ReminderEditActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mDbHelper.open(); 
+
     	setRowIdFromIntent();
 		populateFields();
     }
@@ -177,16 +179,16 @@ public class ReminderEditActivity extends Activity {
             Cursor reminder = mDbHelper.fetchReminder(mRowId);
             startManagingCursor(reminder);
             mTitleText.setText(reminder.getString(
-    	            reminder.getColumnIndexOrThrow(RemindersDbAdapter.KEY_TITLE)));
+    	            reminder.getColumnIndexOrThrow(DatabaseHelper.KEY_TITLE)));
             mBodyText.setText(reminder.getString(
-                    reminder.getColumnIndexOrThrow(RemindersDbAdapter.KEY_BODY)));
+                    reminder.getColumnIndexOrThrow(DatabaseHelper.KEY_BODY)));
             
 
             // Get the date from the database and format it for our use. 
             SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
             Date date = null;
 			try {
-				String dateString = reminder.getString(reminder.getColumnIndexOrThrow(RemindersDbAdapter.KEY_DATE_TIME)); 
+				String dateString = reminder.getString(reminder.getColumnIndexOrThrow(DatabaseHelper.KEY_DATE_TIME));
 				date = dateTimeFormat.parse(dateString);
 	            mCalendar.setTime(date); 
 			} catch (ParseException e) {
@@ -231,7 +233,7 @@ public class ReminderEditActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(RemindersDbAdapter.KEY_ROWID, mRowId);
+        outState.putLong(DatabaseHelper.KEY_ID, mRowId);
     }
     
 
@@ -245,12 +247,12 @@ public class ReminderEditActivity extends Activity {
 
         if (mRowId == null) {
         	
-        	long id = mDbHelper.createReminder(title, body, reminderDateTime);
+        	long id = mDbHelper.createReminder(title, body, reminderDateTime,false,0);
             if (id > 0) {
                 mRowId = id;
             }
         } else {
-            mDbHelper.updateReminder(mRowId, title, body, reminderDateTime);
+            mDbHelper.updateReminder(mRowId, title, body, reminderDateTime,false,0);
         }
        
         new ReminderManager(this).setReminder(mRowId, mCalendar); 

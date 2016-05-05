@@ -1,14 +1,16 @@
 package com.wolfoxlabs.mychecklist;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ComponentInfo;
 import android.database.Cursor;
 import android.util.Log;
+
+import com.wolfoxlabs.mychecklist.helper.DatabaseHelper;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class OnBootReceiver extends BroadcastReceiver {
 	
@@ -18,17 +20,16 @@ public class OnBootReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 
 		ReminderManager reminderMgr = new ReminderManager(context);
-		
-		RemindersDbAdapter dbHelper = new RemindersDbAdapter(context);
-		dbHelper.open();
+
+		DatabaseHelper dbHelper = new DatabaseHelper(context);
 			
 		Cursor cursor = dbHelper.fetchAllReminders();
 		
 		if(cursor != null) {
 			cursor.moveToFirst(); 
 			
-			int rowIdColumnIndex = cursor.getColumnIndex(RemindersDbAdapter.KEY_ROWID);
-			int dateTimeColumnIndex = cursor.getColumnIndex(RemindersDbAdapter.KEY_DATE_TIME); 
+			int rowIdColumnIndex = cursor.getColumnIndex(DatabaseHelper.KEY_ID);
+			int dateTimeColumnIndex = cursor.getColumnIndex(DatabaseHelper.KEY_DATE_TIME);
 			
 			while(cursor.isAfterLast() == false) {
 

@@ -10,19 +10,21 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.wolfoxlabs.mychecklist.helper.DatabaseHelper;
+
 public class ReminderListActivity extends ListActivity {
     private static final int ACTIVITY_CREATE=0;
     private static final int ACTIVITY_EDIT=1;
     
-    private RemindersDbAdapter mDbHelper;
+    private DatabaseHelper  mDbHelper;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reminder_list);
-        mDbHelper = new RemindersDbAdapter(this);
-        mDbHelper.open();
+        mDbHelper = new DatabaseHelper(this);
+
         fillData();
         registerForContextMenu(getListView());
 
@@ -34,7 +36,7 @@ public class ReminderListActivity extends ListActivity {
         startManagingCursor(remindersCursor);
         
         // Create an array to specify the fields we want to display in the list (only TITLE)
-        String[] from = new String[]{RemindersDbAdapter.KEY_TITLE};
+        String[] from = new String[]{DatabaseHelper.KEY_TITLE};
         
         // and an array of the fields we want to bind those fields to (in this case just text1)
         int[] to = new int[]{R.id.text1};
@@ -57,7 +59,7 @@ public class ReminderListActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Intent i = new Intent(this, ReminderEditActivity.class);
-        i.putExtra(RemindersDbAdapter.KEY_ROWID, id);
+        i.putExtra(DatabaseHelper.KEY_ID, id);
         startActivityForResult(i, ACTIVITY_EDIT); 
     }
 

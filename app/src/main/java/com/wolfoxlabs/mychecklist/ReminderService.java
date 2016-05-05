@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
+import com.wolfoxlabs.mychecklist.helper.DatabaseHelper;
+
 public class ReminderService extends WakeReminderIntentService {
 
 	public ReminderService() {
@@ -17,7 +19,7 @@ public class ReminderService extends WakeReminderIntentService {
 	@Override
 	void doReminderWork(Intent intent) {
 		Log.d("ReminderService", "Doing work.");
-		Long rowId = intent.getExtras().getLong(RemindersDbAdapter.KEY_ROWID);
+		Long rowId = intent.getExtras().getLong(DatabaseHelper.KEY_ID);
 //
 //		NotificationManager mgr = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 //

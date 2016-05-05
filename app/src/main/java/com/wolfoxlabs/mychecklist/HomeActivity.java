@@ -33,16 +33,16 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
     private static final int ACTIVITY_EDIT=1;
     // Database Helper
     DatabaseHelper db;
-    private RemindersDbAdapter mDbHelper;
+
     MyAdapter myAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.content_main);
-        mDbHelper = new RemindersDbAdapter(this);
+
         db = new DatabaseHelper(getApplicationContext());
-        mDbHelper.open();
+
         CalendarUtils calendarUtils = new CalendarUtils();
         today = calendarUtils.getToday();
         setupUI();

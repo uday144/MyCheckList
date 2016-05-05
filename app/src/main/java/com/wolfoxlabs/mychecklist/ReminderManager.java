@@ -1,11 +1,13 @@
 package com.wolfoxlabs.mychecklist;
 
-import java.util.Calendar;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+
+import com.wolfoxlabs.mychecklist.helper.DatabaseHelper;
+
+import java.util.Calendar;
 
 public class ReminderManager {
 
@@ -20,7 +22,7 @@ public class ReminderManager {
 	public void setReminder(Long taskId, Calendar when) {
 		
         Intent i = new Intent(mContext, OnAlarmReceiver.class);
-        i.putExtra(RemindersDbAdapter.KEY_ROWID, (long)taskId); 
+        i.putExtra(DatabaseHelper.KEY_ID, (long)taskId);
 
         PendingIntent pi = PendingIntent.getBroadcast(mContext, 0, i, PendingIntent.FLAG_ONE_SHOT); 
         

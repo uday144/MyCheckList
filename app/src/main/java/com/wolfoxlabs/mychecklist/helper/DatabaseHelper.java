@@ -38,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 	// Common column names
-	private static final String KEY_ID = "id";
+	public static final String KEY_ID = "id";
 	private static final String KEY_CREATED_AT = "created_at";
 
 	// NOTES Table - column nmaes
@@ -52,7 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String KEY_TODO_ID = "todo_id";
 	private static final String KEY_TAG_ID = "tag_id";
 
-	// Reminder Table - column names
+	// RepeatReminder Table - column names
 	public static final String REMINDER_ID = "reminder_id";
 	public static final String INTERVAL = "interval";
 
