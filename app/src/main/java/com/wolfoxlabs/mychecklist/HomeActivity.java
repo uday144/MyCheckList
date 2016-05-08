@@ -62,7 +62,10 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
         Intent i = new Intent(this, ReminderEditActivity.class);
         startActivityForResult(i, ACTIVITY_CREATE);
     }
-
+    public void showReminder() {
+        Intent i = new Intent(this, ReminderListActivity.class);
+        startActivity(i);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -142,20 +145,26 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
         calendarDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        HomeActivity.this,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd.setThemeDark(false);
-                dpd.dismissOnPause(true);
-                dpd.show(getFragmentManager(), "Datepickerdialog");
+
+                //showDatePicker();
+                showReminder();
             }
 
         });
 
+    }
+
+    private void showDatePicker() {
+        now = Calendar.getInstance();
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                HomeActivity.this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.setThemeDark(false);
+        dpd.dismissOnPause(true);
+        dpd.show(getFragmentManager(), "Datepickerdialog");
     }
 
 
@@ -181,11 +190,11 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
     private void DBoperrations()
     {
         // Creating tags
-        Tag tag1 = new Tag("Shopping");
-        Tag tag2 = new Tag("Important");
+        Tag tag1 = new Tag("Writer");
+        Tag tag2 = new Tag("Reader");
         Tag tag3 = new Tag("Watchlist");
-        Tag tag4 = new Tag("Androidhive");
-
+        Tag tag4 = new Tag("Coding");
+        Tag tag5 = new Tag("Meditation");
         // Inserting tags in db
         long tag1_id = db.createTag(tag1);
         long tag2_id = db.createTag(tag2);
@@ -195,20 +204,22 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
         Log.d("Tag Count", "Tag Count: " + db.getAllTags().size());
 
         // Creating ToDos
-        Todo todo1 = new Todo("iPhone 5S", 0);
-        Todo todo2 = new Todo("Galaxy Note II", 0);
-        Todo todo3 = new Todo("Whiteboard", 0);
+        Todo todo1 = new Todo("Write Blog", 0);
+        Todo todo2 = new Todo("Write on quora", 0);
 
-        Todo todo4 = new Todo("Riddick", 0);
-        Todo todo5 = new Todo("Prisoners", 0);
-        Todo todo6 = new Todo("The Croods", 0);
-        Todo todo7 = new Todo("Insidious: Chapter 2", 0);
 
-        Todo todo8 = new Todo("Don't forget to call MOM", 0);
-        Todo todo9 = new Todo("Collect money from John", 0);
+        Todo todo3 = new Todo("TED", 0);
+        Todo todo4 = new Todo("YouTube: Gradle", 0);
+        Todo todo9 = new Todo("YouTube: Standups", 0);
 
-        Todo todo10 = new Todo("Post new Article", 0);
-        Todo todo11 = new Todo("Take database backup", 0);
+        Todo todo5 = new Todo("Read Coding Horror", 0);
+        Todo todo10 = new Todo("Read https://rominirani.com/2014/08/19/gradle-tutorial-part-6-android-studio-gradle/", 0);
+
+        Todo todo8 = new Todo("Read Code complete", 0);
+        Todo todo6 = new Todo("Read on quora", 0);
+
+        Todo todo7 = new Todo("CODE: Algo", 0);
+
 
         // Inserting todos in db
         // Inserting todos under "Shopping" Tag
@@ -223,18 +234,15 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
         long todo7_id = db.createToDo(todo7, new long[] { tag3_id });
 
         // Inserting todos under "Important" Tag
-        long todo8_id = db.createToDo(todo8, new long[] { tag2_id });
+
         long todo9_id = db.createToDo(todo9, new long[] { tag2_id });
 
-        // Inserting todos under "Androidhive" Tag
-        long todo10_id = db.createToDo(todo10, new long[] { tag4_id });
-        long todo11_id = db.createToDo(todo11, new long[] { tag4_id });
 
         Log.e("Todo Count", "Todo count: " + db.getToDoCount());
 
         // "Post new Article" - assigning this under "Important" Tag
         // Now this will have - "Androidhive" and "Important" Tags
-        db.createTodoTag(todo10_id, tag2_id);
+        //db.createTodoTag(todo10_id, tag2_id);
 
         // Getting all tag names
         Log.d("Get Tags", "Getting All Tags");
@@ -264,7 +272,7 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
         Log.d("Delete ToDo", "Deleting a Todo");
         Log.d("Tag Count", "Tag Count Before Deleting: " + db.getToDoCount());
 
-        db.deleteToDo(todo8_id);
+       // db.deleteToDo(todo8_id);
 
         Log.d("Tag Count", "Tag Count After Deleting: " + db.getToDoCount());
 

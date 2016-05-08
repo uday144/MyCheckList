@@ -38,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 	// Common column names
-	public static final String KEY_ID = "id";
+	public static final String KEY_ID = "_id";
 	private static final String KEY_CREATED_AT = "created_at";
 
 	// NOTES Table - column nmaes
