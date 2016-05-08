@@ -200,7 +200,7 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
         long tag2_id = db.createTag(tag2);
         long tag3_id = db.createTag(tag3);
         long tag4_id = db.createTag(tag4);
-
+        long tag5_id = db.createTag(tag5);
         Log.d("Tag Count", "Tag Count: " + db.getAllTags().size());
 
         // Creating ToDos
@@ -272,7 +272,7 @@ public class HomeActivity extends Activity implements DatePickerDialog.OnDateSet
         Log.d("Delete ToDo", "Deleting a Todo");
         Log.d("Tag Count", "Tag Count Before Deleting: " + db.getToDoCount());
 
-       // db.deleteToDo(todo8_id);
+        db.deleteToDo(todo1_id);
 
         Log.d("Tag Count", "Tag Count After Deleting: " + db.getToDoCount());
 
