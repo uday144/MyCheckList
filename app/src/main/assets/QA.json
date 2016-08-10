@@ -1,0 +1,24 @@
+{
+  "questions": [
+    {
+      "question": "What's new in Android N",
+      "answers": [
+        "Apis",
+        "Coleoptera",
+        "Formicidae",
+        "Rhopalocera"
+      ]
+
+    },
+    {
+      "question": "What is the JobScheduler API?",
+      "answers": [
+        "1,233 K",
+        "5,778 K",
+        "12,130 K",
+        "101,300 K"
+      ]
+    }
+
+  ]
+}
